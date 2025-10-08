@@ -1,0 +1,15 @@
+{
+  "name": "tshirt-ecom",
+  "version": "1.0.0",
+  "description": "T-Shirt Design Builder - Full Stack Application",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "setup": "cd backend && npm install && npx prisma migrate dev && cd ../frontend && npm install"
+  },
+  "keywords": ["tshirt", "ecommerce", "design", "3d"],
+  "author": "",
+  "license": "MIT"
+}
+

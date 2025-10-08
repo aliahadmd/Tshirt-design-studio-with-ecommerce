@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  designs   Design[]
+  orders    Order[]
+}
+
+model Design {
+  id          String   @id @default(uuid())
+  name        String
+  frontDesign Json     // Stores canvas state for front design
+  backDesign  Json?    // Stores canvas state for back design
+  tshirtColor String   @default("#ffffff")
+  thumbnail   String?  // Path to thumbnail image
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    String      @default("pending") // pending, completed, cancelled
+  total     Float       @default(0)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  designId  String
+  design    Design   @relation(fields: [designId], references: [id])
+  quantity  Int      @default(1)
+  size      String   @default("M") // XS, S, M, L, XL, XXL
+  price     Float    @default(0)
+  createdAt DateTime @default(now())
+}
